@@ -1,22 +1,18 @@
-# %%
 from langchain.document_loaders import UnstructuredPDFLoader
 from langchain.docstore.document import Document
-from langchain.text_splitter import LatexTextSplitter
+from langchain.text_splitter import LatexTextSplitter, CharacterTextSplitter
+
 
 class DataLoading:
-
-    def load_pdf_file(file_name: str):
+    def load_pdf_file(self, file_name: str):
         loader = UnstructuredPDFLoader(file_path=file_name)
         docs = loader.load_and_split(LatexTextSplitter())
         return docs
 
-
-    def convert_string(text: str, metadata=None):
+    def convert_string(self, text: str, metadata=None):
         text_splitted = text.split("\n\n")
-        return [Document(page_content=text_splitted, metadata=metadata)]
+        return [Document(page_content=chunk_text, metadata=metadata) for chunk_text in text_splitted]
 
+# d = DataLoading().load_pdf_file("/home/burakkaya/personal_projects/sumgpt/data/2309.00071.pdf")
 
-    with open("data/test.txt", "r") as f:
-        txt = f.read()
-        data = convert_string(txt, metadata={"source": "local"})
-
+# print(d)
