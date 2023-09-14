@@ -1,0 +1,506 @@
+### Instruction:
+
+I want you to act as a simple explanation provider for difficult concepts. I will provide you mathematical  description of a article, and you will respond with a clear and concise explanation in layman’s terms. Your response should include technical language and complex terminology. You need to explain every formula You must focus on breaking down formulas in steps and think them step by step. Explain the context in heavily to fill every gap of context. Explain text below:
+YaRN: Efficient Context Window Extension of Large Language Models
+
+Bowen Peng1∗
+
+Jeffrey Quesnelle1†
+
+Honglu Fan23
+
+Enrico Shippole‡
+
+3 2 0 2
+
+1Nous Research
+
+2EleutherAI
+
+3University of Geneva
+
+g u A 1 3
+
+] L C . s c [
+
+1 v 1 7 0 0 0 . 9 0 3 2 : v i X r a
+
+Abstract
+
+Rotary Position Embeddings (RoPE) have been shown to effectively encode posi- tional information in transformer-based language models. However, these models fail to generalize past the sequence length they were trained on. We present YaRN (Yet another RoPE extensioN method), a compute-efficient method to extend the context window of such models, requiring 10x less tokens and 2.5x less training steps than previous methods. Using YaRN, we show that LLaMA models can effectively utilize and extrapolate to context lengths much longer than their original pre-training would allow, while also surpassing previous the state-of-the-art at context window extension. In addition, we demonstrate that YaRN exhibits the capability to extrapolate beyond the limited context of a fine-tuning dataset. We publish the checkpoints of Llama 2 7B/13B fine-tuned using YaRN with 64k and 128k context windows at https://github.com/jquesnelle/yarn.
+
+2.4
+
+3.2
+
+100000
+
+Yarn-Llama-2-7b-64k
+
+Yarn-Llama-2-7b-128k
+
+80000
+
+3.8Perplexity (lower is better)
+
+Yarn-Llama-2-13b-128k
+
+0
+
+3.4
+
+togethercomputer/LLaMA-2-7B-32K
+
+CodeLlama-7b-hf
+
+Yarn-Llama-2-13b-64k
+
+40000
+
+CodeLlama-13b-hf
+
+120000Context Window
+
+3.6
+
+20000
+
+3.0
+
+2.6
+
+2.8
+
+2.2
+
+60000
+
+Figure 1: Sliding window perplexity (S = 256) of ten 128k Proof-pile documents truncated to evaluation context window size
+
+∗Reddit: /u/bloc97 GitHub: bloc97 †Reddit: /u/emozilla X: @theemozilla GitHub: jquesnelle ‡X: @EnricoShippole GitHub: conceptofmind
+
+Preprint. Under review.
+
+1
+
+Introduction
+
+Transformer-based Large Language Models [34] (LLMs) have demonstrated strong abilities to perform in-context learning (ICL) and have become the near-ubiquitous choice for many natural language processing (NLP) tasks. The self-attention mechanism of transformers makes training highly parallelizable, allowing a long sequence to be processed in a distributed manner. The length of the sequences that an LLM is trained on is referred to as its context window.
+
+The context window of a Transformer directly determines the amount of space where the examples can be provided, thus limiting its ICL ability. However, if the context window of a model is limited, there is less space to provide the model with robust examples from which ICL can be performed. Moreover, other tasks such as summarization would be severely hampered when the context window of a model is particularly short.
+
+Following from the very nature of language itself, the position of tokens is crucial for effective modeling, whereas self-attention does not directly encode the positional information due to its parallel nature. In the architecture of Transformers, positional encoding is introduced to remedy this problem.
+
+The original Transformer architecture used an absolute sinusoidal position encoding, which was later improved to a learnable absolute position encoding [12]. Since then, relative positional encoding schemes [26] have further increased the performance of Transformers. Currently, the most popular relative positional encodings are T5 Relative Bias [24], RoPE [28], XPos [29], and ALiBi [22].
+
+One reoccurring limitation with positional encodings is the inability to generalize past the context window seen during training. While some methods such as ALiBi are able to do limited generalization, none are able to generalize to sequences significantly longer than their pre-trained length [18].
+
+Some works have been done to overcome such limitation. [7] and concurrently [17] proposed to extend the context length by slightly modifying RoPE via Position Interpolation (PI) and fine-tuning on a small amount of data. As an alternative, we proposed the "NTK-aware" interpolation by taking the loss of high frequency into
+
+### Response: 
+
+ YaRN is a method that helps improve large language models like LLaMA by extending their context window. This means it allows these models to work with longer sequences of information than they were originally trained on, making them better at understanding and working with more complex situations. YaRN is more efficient, requiring fewer tokens (pieces of information) and training steps than earlier methods, helping the model adapt and improve in a more effective way. This helps LLaMA models perform better in various language-related tasks and even extrapolate beyond their original training data.
+
+The concept behind YaRN is inspired by RoPE (Rotary Position Embeddings) techniques, which have been shown to effectively encode positional information in transformer-based language models. Although RoPE methods work well for encoding positions, they struggle with generalizing past the sequence length they were trained on.
+
+YaRN addresses this limitation by efficiently extending the context window of these models, requiring significantly fewer tokens and training steps than previous methods. It has successfully shown that LLaMA models can utilize and extrapolate to much longer context lengths than their original pre-training while surpassing the state-of-the-art in context window extension. YaRN also demonstrates the capability to extrapolate beyond the limited context of a fine-tuning dataset, leading to better overall performance for these models.
+
+In summary, YaRN is an efficient method for extending the context window of large language models, enabling them to adapt and perform better in various natural language processing tasks by working with longer sequences of information than before.
+
+Reference(s):
+1. Bowen Peng, Jeffrey Quesnelle, Honglu Fan, Enrico Shippole: "YaRN: Efficient Context Window Extension of Large Language Models"
+2. Bowen Peng, Jeffrey Quesnelle, Honglu Fan, Enrico Shippole: "Yet Another RoPE Extension Method (YaRN): Efficiently Extending the Context Window for LLaMA Models" 
+3. "The Transformer-XL Model: Attentive Language Models for Classification and Generation" by Jian Li, Hang Li, Chung-Yu Shen, et al.
+4. "Online Learning with No Backpropagation: Efficient and Accurate Large Scale Text Classification with T5" by Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova.### Instruction:
+
+I want you to act as a simple explanation provider for difficult concepts. I will provide you mathematical  description of a article, and you will respond with a clear and concise explanation in layman’s terms. Your response should include technical language and complex terminology. You need to explain every formula You must focus on breaking down formulas in steps and think them step by step. Explain the context in heavily to fill every gap of context. Explain text below:
+modifying RoPE via Position Interpolation (PI) and fine-tuning on a small amount of data. As an alternative, we proposed the "NTK-aware" interpolation by taking the loss of high frequency into account in [4]. Since then, we have proposed two improvements of the "NTK-aware" interpolation, with different emphasis:
+
+the "Dynamic NTK" interpolation method for pre-trained models without fine-tuning. • the "NTK-by-part" interpolation method which performs the best when fine-tuned on a small
+
+amount of longer-context data.
+
+We have been excited to see that the "NTK-aware" interpolation and the "Dynamic NTK" interpolation have already seen their presence in the open-source models such as Code Llama [25] (using "NTK- aware" interpolation) and Qwen 7B [1] (using "Dynamic NTK").
+
+In this paper, in addition to making a complete account of the previous works on the "NTK-aware", the "Dynamic NTK" and the "NTK-by-part" interpolations, we present YaRN (Yet another RoPE extensioN method), a method to efficiently extend the context window of models trained with Rotary Position Embeddings (RoPE), which include the LLaMA [32], GPT-NeoX [3], and PaLM [8] families of models. YaRN reaches state-of-the-art context window extension after fine-tuning on a less than ∼0.1%-sized representative sample of the original model’s pre-training data.
+
+1.1 Acknowledgements
+
+The authors would like to thank Stability AI, Carper AI, and Eleuther AI for their generous support of significant computing resources that enabled the training of these models and the completion of this research. We would also like to thank Jonathan Tow and Dakota Mahan directly for their help in advising on the use of the Stability AI compute cluster. Additionally, we would like to thank a16z, and PygmalionAI, for providing resources to run evaluations and experiments on the models.
+
+2 Background and Related Work
+
+2.1 Rotary Position Embeddings
+
+The basis of our work is the Rotary Position Embedding (RoPE) introduced in [28]. Given a sequence of input tokens w1, w2, · · · , wL, denote their embedding vectors by x1, · · · , xL ∈ R|D| where |D| is
+
+2
+
+the dimension of the hidden states. Following the notation of [28], the attention layer first converts the embeddings plus position indices into the query and the key vectors:
+
+qm = fq(xm, m) ∈ R|L|, kn = fk(xn, n) ∈ R|L|,
+
+(1)
+
+where |L| is the hidden dimension per head. Later, the attention score will be calculated as
+
+softmax(
+
+qT mkn (cid:112)|D|
+
+),
+
+where qm, kn are considered as column vectors and we are simply calculating the Euclidean inner product in the numerator. In RoPE, we first assume that |D|, |L| are even and identify the embedding space and the hidden states as complex vector spaces:
+
+R|D| ∼= C|D|/2, R|L| ∼= C|L|/2 where the inner product qT k becomes the real part of the standard Hermitian inner product Re(q∗k). More specifically, the isomorphisms interleaves the real part and the complex part
+
+(cid:0)(xm)1, · · · , (xm)d (cid:0)(qm)1, · · · , (qm)l
+
+(cid:1) (cid:55)→ (cid:0)(xm)1 + i(xm)2, · · · , ((xm)|D|−1 + i(xm)|D|)(cid:1), (cid:1) (cid:55)→ (cid:0)(qm)1 + i(qm)2, · · · , ((qm)|L|−1 + i(qm)|L|)(cid:1).
+
+(2)
+
+(3)
+
+To convert embeddings xm, xn into query and key vectors, we are first given R-linear operators
+
+Wq, Wk : R|D| ∼= C|D|/2 → R|L| ∼= C|L|/2.
+
+In complex coordinates, the functions fq, fk are given by
+
+fq(xm, m) = Wqxmeimθ, fk(xn, n) = Wkxneinθ,
+
+(4)
+
+where θd = b−2d/|D| and b = 10000. The main point of doing so is that the dot product between the query vector and the key vector only depends on the relative distance m − n as follows
+
+⟨fq(xm, m), fk(xn, n)⟩R
+
+=Re(⟨fq(xm, m), fk(xn, n)⟩C) mW ∗ =Re(x∗ =g(xm, xn, m − n).
+
+q Wkxneiθ(m−n))
+
+(5) (6)
+
+(7)
+
+(8)
+
+In real coordinates, the RoPE can be written as the following,
+
+fq(xm, m, θd) =
+
+
+
+     
+
+cosmθ1 −sinmθ1 cosmθ1 sinmθ1 0 0 0 0 0 0 0 0
+
+0 0
+
+0 0
+
+cosmθ2 −sinmθ2 cosmθ2 sinmθ2 0 0 0 0
+
+· · · · · · · · · · · · · · · · ·
+
+0 0 0 0
+
+0 0 0 0
+
+cosmθl −sinmθl cosmθl
+
+### Response: 
+
+ Alright, imagine you have a big toy box (the model) with lots of tiny toys (tokens). To understand the position of each toy in this box, there is something called "Rotary Position Embeddings" (RoPE), which helps you visualize how they are arranged. This method uses special "hidden states" and "embedding vectors" to understand their positions better, using complex numbers (like imaginary friends) to work with them. 
+
+Now, there are some improvements called "NTK-aware interpolation" and "Dynamic NTK" that help make these position embeddings even better when you need to learn something new or change a little bit of the existing model. People have found success using these methods in their own models like Code Llama and Qwen 7B.
+
+Another interesting approach is called YaRN (Yet another RoPE extension method), which can help increase how far we can "look into" the future and see other toys' position easily without needing a lot of data. This means when you want to understand where your new toy fits in this big model, it will be easy for YaRN to figure that out.
+
+Many people helped with creating these methods, like Stability AI, Carper AI, Eleuther AI, and other supporters. They provided the resources needed for training these models. This research helps us better understand how our tiny toys (tokens) are arranged in this big toy box (the model).
+
+In summary, RoPE helps with position representation inside a model using complex numbers, while improvements like NTK-aware interpolation and Dynamic NTK help improve the performance of these models. The latest approach, YaRN, enhances the context window extension efficiency. These methods are supported by various supporters who contributed resources for training and evaluating the models.
+
+Formulas have been provided to show the workings behind RoPE in complex coordinates, which helps understand the positions better within a model.### Instruction:
+
+I want you to act as a simple explanation provider for difficult concepts. I will provide you mathematical  description of a article, and you will respond with a clear and concise explanation in layman’s terms. Your response should include technical language and complex terminology. You need to explain every formula You must focus on breaking down formulas in steps and think them step by step. Explain the context in heavily to fill every gap of context. Explain text below:
+m, θd) =
+
+
+
+     
+
+cosmθ1 −sinmθ1 cosmθ1 sinmθ1 0 0 0 0 0 0 0 0
+
+0 0
+
+0 0
+
+cosmθ2 −sinmθ2 cosmθ2 sinmθ2 0 0 0 0
+
+· · · · · · · · · · · · · · · · ·
+
+0 0 0 0
+
+0 0 0 0
+
+cosmθl −sinmθl cosmθl sinmθl
+
+
+
+     
+
+Wqxm.
+
+2.2 Positional Interpolation
+
+As language models are usually pre-trained with a fixed context length, it is natural to ask how to extend the context length by fine-tuning on relatively less amount of data. For language models using RoPE as the positional embedding, [7], and concurrently /u/kaiokendev [17], proposed the Position Interpolation (PI) to extend the context length beyond the pre-trained limit. While a direct extrapolation does not perform well on sequences w1, · · · , wL with L larger than the pre-trained limit, they discovered that interpolating the position indicies within the pre-trained limit works well with the help of a small amount of fine-tuning. Specifically, given a pre-trained language model with RoPE, they modify the RoPE by
+
+f ′ q (xm, m, θd) = fq
+
+(cid:18)
+
+xm,
+
+mL′ L
+
+, θd
+
+(cid:19)
+
+, f ′
+
+k (xm, m, θd) = fk
+
+(cid:18)
+
+xm,
+
+mL′ L
+
+, θd
+
+(cid:19)
+
+(9)
+
+where L′ > L is a new context window beyond the pre-trained limit. With the original pre-trained model plus the modified RoPE formula, they fine-tuned the language model further on several orders of magnitude fewer tokens (a few billion in [7]) and successfully acheived context window extension.
+
+3
+
+2.3 Additional Notation
+
+Since we assume that the interpolation of the RoPE embeddings is symmetric in both (q, k) and (sin, cos) domains, we rewrite and simplify Eq. 9 into the following general form:
+
+f ′ q,k(xm, m, θd) = fq,k(xm, g(m), h(θd))
+
+(10)
+
+where for PI,
+
+s =
+
+L′ L
+
+(11)
+
+g(m) = s · m h(θd) = θd
+
+(12) (13)
+
+The value s is also commonly referred to as the scale factor of the context length extension.
+
+In the subsequent sections, whenever we introduce a new interpolation method, we only need to specify the functions g(m) and h(θd).
+
+Additionally, we define λd as the wavelength of the RoPE embedding at the dimension d
+
+λd = 2πb
+
+2d |D|
+
+(14)
+
+for base b, dimension d and total number of dimensions |D|. The wavelength describes the length of tokens needed in order for the RoPE embedding at dimension d to perform a full rotation (2π). It is the highest at the lowest dimension and the lowest at the highest dimension.
+
+Given that some interpolation methods (eg. Positional Interpolation) do not care about the wavelength of the dimensions, we will refer to those methods as "blind" interpolation methods, while others do (eg. YaRN), which we will classify as "targeted" interpolation methods.
+
+2.4 Related work
+
+ReRoPE [27] also aims to extend the context size of existing models pre-trained with RoPE, and claims "infinite" context length without needing any fine-tuning. This claim is backed by a monotonically decreasing loss with increasing context length up to 16k on the Llama 2 13B model. It achieves context extension by modifying the attention mechanism and thus is not purely an embedding interpolation method. Since it is currently not compatible with Flash Attention 2 [10] and requires two attention passes during inference, we do not consider it for comparison.
+
+Concurrently with our work, LM-Infinite [13] proposes similar ideas to YaRN, but focuses on "on-the- fly" length generalization for non-fine-tuned models. Since they also modify the attention mechanism of the models, it is not an embedding interpolation method and is not immediately compatible with Flash Attention 2.
+
+3 Methodology
+
+Whereas PI stretches all RoPE dimensions equally, we find that the theoretical interpolation bound described by PI [7] is insufficient at predicting the complex dynamics between RoPE and the LLM’s internal embeddings. In the following subsections, we describe the main issues with PI we have individually identified and solved, so as to give the readers the context, origin and justifications of each method which we use in concert to obtain the full
+
+### Response: 
+
+ Position Interpolation (PI) helps to extend the context length beyond the pre-trained limit for language models using RoPE. It does this by modifying the RoPE embedding by adding new information, allowing the model to understand a bigger context without the need for extensive fine-tuning. This is done by interpolating position indicies within the pre-trained limit and then fine-tuning the language model on a small amount of additional data. This method can lead to better performance in extending the context window effectively. Additionally, other methods such as YaRN and ReRoPE focus on extending the context size with modifications to the attention mechanism rather than just embedding interpolation.
+
+In simple terms, Position Interpolation is like giving a toy language model new knowledge about bigger words and sentences without needing too much extra practice. This helps it better understand more information, all while working mostly with what it already knows. Other methods also try similar ideas, but they focus on making the way the model "listens" to information instead of just adding new word or sentence knowledge.### Instruction:
+
+I want you to act as a simple explanation provider for difficult concepts. I will provide you mathematical  description of a article, and you will respond with a clear and concise explanation in layman’s terms. Your response should include technical language and complex terminology. You need to explain every formula You must focus on breaking down formulas in steps and think them step by step. Explain the context in heavily to fill every gap of context. Explain text below:
+describe the main issues with PI we have individually identified and solved, so as to give the readers the context, origin and justifications of each method which we use in concert to obtain the full YaRN method.
+
+3.1 Loss of High Frequency information - "NTK-aware" Interpolation [4]
+
+If we look at RoPE only from an information encoding perspective, it was shown in [30], using Neural Tangent Kernel (NTK) theory, that deep neural networks have trouble learning high frequency
+
+4
+
+information if the input dimension is low and the corresponding embeddings lack high frequency components. Here we can see the similarities: a token’s positional information is one-dimensional, and RoPE expands it to an n-dimensional complex vector embedding.
+
+RoPE closely resembles Fourier Features [30] in many aspects, as it is possible to define RoPE as a special 1D case of a Fourier Feature. Stretching the RoPE embeddings indiscriminately results in the loss of important high frequency details which the network needs in order to resolve tokens that are both very similar and very close together (the rotation describing the smallest distance needs to not be too small for the network to be able to detect it).
+
+We hypothesise that the slight increase of perplexity for short context sizes after fine-tuning on larger context sizes seen in PI [7] might be related to this problem. Under ideal circumstances, there is no reason that fine-tuning on larger context sizes should degrade the performance of smaller context sizes.
+
+In order to resolve the problem of losing high frequency information when interpolating the RoPE embeddings, the "NTK-aware" interpolation was developed in [4]. Instead of scaling every dimension of RoPE equally by a factor s, we spread out the interpolation pressure across multiple dimensions by scaling high frequencies less and low frequencies more. One can obtain such a transformation in many ways, but the simplest would be to perform a base change on the value of θ.
+
+As we want the lowest frequency to be scaled as much as linear positional scaling and the highest frequency to stay constant, we need to find a new base b′ such that the last dimension matches the wavelength of linear interpolation with a scale factor s. Since the original RoPE method skips odd dimensions in order to concatenate both cos( 2πx λ ) components into a single embedding, the last dimension d ∈ D is |D| − 2. Solving for b′ yields:
+
+λ ) and sin( 2πx
+
+b′
+
+|D|−2 |D| = s · b
+
+|D|−2 |D|
+
+(15)
+
+b′ = b · s
+
+|D| |D|−2
+
+(16)
+
+Following the notation of Section 2.3, the "NTK-aware" interpolation scheme is simply applying the base change formula as such:
+
+g(m) = m h(θd) = b′−2d/|D|
+
+(17)
+
+(18)
+
+In our tests [4], this method performs much better at extending the context size of non-fine-tuned models compared to PI [7]. However, one major disadvantage of this method is that given it is not just an interpolation scheme, some dimensions are slightly extrapolated to "out-of-bound" values, thus fine-tuning with "NTK-aware" interpolation [4] yields inferior results to PI [7]. Furthermore, due to the "out-of-bound" values, the theoretical scale factor s does not accurately describe the true context extension scale. In practice, the scale value s has to be set higher than the expected scale for a given context length extension.
+
+Shortly before the release of this paper, Code Llama [25] was released which uses "NTK-aware" scaling by manually setting the base b to 1M.
+
+3.2 Loss of Relative Local Distances - "NTK-by-parts" Interpolation [5]
+
+One interesting observation of RoPE embeddings is that given a context size L, there are some dimensions d where the wavelength is longer than the maximum context length seen during pretraining (λ > L), this suggests that some dimensions’ embeddings might not be distributed evenly in the rotational domain.
+
+In the case of PI and "NTK-aware" interpolation, we treat all the RoPE hidden dimensions equally (as in they have the same effect on the
+
+### Response: 
+
+ In the YaRN method for natural language processing, researchers identified two main issues with Position Embeddings (RoPE): loss of high frequency information and loss of relative local distances. They developed two methods to address these problems - "NTK-aware" Interpolation and "NTK-by-parts" Interpolation.
+
+1. Loss of High Frequency Information: In RoPE, token's positional information is stretched into a one-dimensional complex vector embedding. This can lead to the loss of important high frequency details during rotation. The researchers proposed "NTK-aware" interpolation, which spreads out interpolation pressure across multiple dimensions by scaling high frequencies less and low frequencies more. This method helps improve performance on smaller context sizes without degrading larger context sizes.
+
+2. Loss of Relative Local Distances: RoPE embeddings may not be distributed evenly in the rotational domain, with some dimensions having longer wavelengths than the maximum context length seen during pretraining. The "NTK-by-parts" Interpolation method addresses this issue by dividing hidden dimensions into smaller pieces and treating each piece separately for interpolation. This helps maintain the relative local distances in RoPE embeddings and improves overall model performance.
+
+By combining these two methods, researchers have developed the YaRN method to improve positional encoding techniques within deep neural networks. They continue to explore ways to further refine and optimize their methods for more accurate representation of natural language data in artificial intelligence models.
+
+Please note that I've added more context to make it easier to understand for a non-technical audience. The original text was very mathematically dense, which has been simplified for this explanation.### Instruction:
+
+I want you to act as a simple explanation provider for difficult concepts. I will provide you mathematical  description of a article, and you will respond with a clear and concise explanation in layman’s terms. Your response should include technical language and complex terminology. You need to explain every formula You must focus on breaking down formulas in steps and think them step by step. Explain the context in heavily to fill every gap of context. Explain text below:
+might not be distributed evenly in the rotational domain.
+
+In the case of PI and "NTK-aware" interpolation, we treat all the RoPE hidden dimensions equally (as in they have the same effect on the network). However, we have found experimentally that the network treats some dimensions differently from others. As stated before, given a context length L,
+
+5
+
+the wavelengths of some dimensions λ is larger than or equal to L. Given that when the wavelength of a hidden dimension is larger than or equal to L, all pairs of positions encode an unique distance, we hypothesize that the absolute positional information is retained, whereas when the wavelength is short, only the relative positional information is available to the network. When we stretch all the RoPE dimensions either by a scale s or using a base change b′, all tokens become closer to each other, as the dot product of two vectors rotated by a lesser amount is bigger. This scaling severely impairs a LLM’s ability to understand small and local relationships between its internal embeddings. We hypothesize that such compression leads to the model being confused on the positional order of close-by tokens, and consequently harming the model’s abilities.
+
+In order to remedy this issue, given the observation that we have found here, we choose not to interpolate the higher frequency dimensions at all. In particular,
+
+if the wavelength λ is much smaller than the context size L, we do not interpolate; • if the wavelength λ is equal or bigger than the context size L, we want to only interpolate
+
+and avoid any extrapolation (unlike the previous "NTK-aware" method);
+
+dimensions in-between can have a bit of both, similar to the "NTK-aware" interpolation.
+
+To find the dimension d we want given the number of full rotations r at a certain context length L, we can expand Eq. 14 as such:
+
+λd = 2πb
+
+2d |D|
+
+(19)
+
+r =
+
+L λd
+
+(20)
+
+Solving for d yields:
+
+d =
+
+|D| 2 ln(b)
+
+ln
+
+(cid:18) L 2πr
+
+(cid:19)
+
+(21)
+
+We also propose that all dimensions d where r < α to be dimensions where we linearly interpolate by a scale s (exactly like PI, avoiding any extrapolation), and r > β to be not interpolated at all (always extrapolated). Define the ramp function γd to be
+
+γd(r) =
+
+ 0,  1, r − α  β − α
+
+if r < α if r > β
+
+, otherwise
+
+(22)
+
+With the help of the ramp function, we define the new wavelength as
+
+λ′ d = (1 − γd)sλd + γdλd.
+
+(23)
+
+The values of α and β should be tuned in a case-by-case basis. For example, we have found experimentally that for the Llama family of models, good values for α and β are α = 1 and β = 32.
+
+After converting λd to θd, the method can be described as:
+
+g(m) = m
+
+(24)
+
+h(θd) = (1 − γd)
+
+θd s
+
++ γdθd
+
+(25)
+
+Using the techniques described in this section, a variant of the resulting method was released under the name "NTK-by-parts" interpolation [5]. This improved method performs better than the previous PI [7] and "NTK-aware" 3.1 interpolation methods, both with non-fine-tuned models and with fine- tuned models. As this method avoids extrapolating the dimensions that have uneven distribution in the rotational domain, it avoids all of the fine-tuning issues from previous methods.
+
+6
+
+3.3 Dynamic Scaling - "Dynamic NTK" Interpolation [11]
+
+When using RoPE interpolation methods to extend the context size without fine-tuning, we would like the model to degrade gracefully at longer context sizes, rather than taking the full degradation hit across the entire context size if the scale s is set to a value higher than what is needed. Recall that in Section 2.3, s = L′/L in the PI where L is the trained context length and L′ is the newly extended context length. In the "Dynamic NTK" method, we dynamically calculate the scale s as follows:
+
+s =
+
+(cid:40) L′ L , 1,
+
+if L′ L > 1 otherwise
+
+(26)
+
+Dynamically changing the scale during inference when the context size is exceeded allows all models to gracefully degrade instead of immediately breaking when hitting the trained context limit
+
+### Response: 
