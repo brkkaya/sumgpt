@@ -39,10 +39,9 @@ for docs in d:
         "### Instruction:\n\nI want you to act as a Mathematician and have a PhD in CS. You will explain difficult"
         " concepts. I will provide you article based on mathematics and computer science , and you will respond with a"
         " clear and concise explanation. Your response should include technical language and complex terminology. You"
-        " need to explain every formula."
-        "You will extract the key-concepts and explain their mathematical formulas."
-        f" Explain the context in heavily to fill every gap of context. Explain text below:\n{docs.page_content}\n\n###"
-        " Response: \n"
+        " need to explain every formula.You will extract the key-concepts and explain their mathematical formulas."
+        " Explain the context in heavily to fill every gap of context. Explain text and equations"
+        f" below:\n{docs.page_content}\n\n### Response: \n"
     )
 
     # llm.generate_summary("What is the meaning of life?")
